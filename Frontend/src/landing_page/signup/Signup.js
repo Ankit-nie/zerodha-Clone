@@ -28,7 +28,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:3002/signup",
+        "https://zerodha-clone-bgai.onrender.com/signup",
         { ...inputValue },
         { withCredentials: true }
       );
@@ -36,7 +36,7 @@ const Signup = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          window.location.href = "http://localhost:3001";
+          window.location.href = "https://zerodha-dashboard-3fwn.onrender.com";
         }, 1000);
       } else {
         handleError(message);

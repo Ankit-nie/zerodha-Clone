@@ -21,7 +21,7 @@ function HomePage() {
         const verifyCookie = async () => {
             try {
                 const { data } = await axios.post(
-                    "http://localhost:3002",
+                    "https://zerodha-clone-bgai.onrender.com",
                     {},
                     { withCredentials: true }
                 );

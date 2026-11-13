@@ -19,7 +19,7 @@ const authRoute = require("./Routes/AuthRoute");
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://zerodha-frontend-xft8.onrender.com", "https://zerodha-dashboard-3fwn.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
