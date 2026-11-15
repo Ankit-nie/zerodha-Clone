@@ -28,12 +28,16 @@ const Summary = () => {
   }, []);
 
   const availableMargin = BASE_OPENING_MARGIN + addedFunds - withdrawnFunds - ordersUsedMargin;
-  const savedProfile = JSON.parse(localStorage.getItem("zerodha_user_profile") || '{"name":"Ankit"}');
+  const urlParams = new URLSearchParams(window.location.search);
+  const savedProfile = JSON.parse(
+    localStorage.getItem("zerodha_user_profile") || '{"name":"User"}'
+  );
+  const displayName = urlParams.get("username") || savedProfile.name || "User";
 
   return (
     <>
       <div className="username">
-        <h6>Hi, {savedProfile.name}!</h6>
+        <h6>Hi, {displayName}!</h6>
         <hr className="divider" />
       </div>
 

@@ -40,11 +40,15 @@ const Signup = () => {
         { ...inputValue },
         { withCredentials: true }
       );
-      const { success, message } = data;
+      const { success, message, user } = data;
       if (success) {
         handleSuccess(message);
+        const params = new URLSearchParams({
+          username: user?.username || username,
+          email: user?.email || email,
+        }).toString();
         setTimeout(() => {
-          window.location.href = dashboardUrl;
+          window.location.href = `${dashboardUrl}?${params}`;
         }, 1000);
       } else {
         handleError(message);

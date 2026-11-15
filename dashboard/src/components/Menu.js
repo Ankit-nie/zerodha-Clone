@@ -7,19 +7,40 @@ const Menu = () => {
   const [activeModal, setActiveModal] = useState(null); // "profile" | "shortcuts" | null
 
   const [userProfile, setUserProfile] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlUsername = urlParams.get("username");
+    const urlEmail = urlParams.get("email");
+
     const saved = localStorage.getItem("zerodha_user_profile");
-    return saved
+    const baseProfile = saved
       ? JSON.parse(saved)
       : {
-          name: "Ankit",
-          userId: "ZU8492",
-          email: "ankit@zerodha.com",
+          name: "User",
+          email: "user@gmail.com",
           phone: "+91 98765 43210",
           pan: "ABCDE1234F",
           dematId: "1208160012345678",
           bank: "HDFC Bank •••• 4821",
         };
+
+    if (urlUsername || urlEmail) {
+      const updated = {
+        ...baseProfile,
+        name: urlUsername || (urlEmail ? urlEmail.split("@")[0] : baseProfile.name),
+        email: urlEmail || baseProfile.email,
+      };
+      localStorage.setItem("zerodha_user_profile", JSON.stringify(updated));
+      return updated;
+    }
+
+    return baseProfile;
   });
+
+  useEffect(() => {
+    if (window.location.search.includes("email=") || window.location.search.includes("username=")) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   const [editName, setEditName] = useState(userProfile.name);
   const [editEmail, setEditEmail] = useState(userProfile.email);
@@ -157,8 +178,8 @@ const Menu = () => {
             onClick={handleProfileClick}
             style={{ userSelect: "none", cursor: "pointer" }}
           >
-            <div className="avatar">{initials || "ZU"}</div>
-            <p className="username">{userProfile.userId}</p>
+            <div className="avatar">{initials || "U"}</div>
+            <p className="username">{userProfile.email || userProfile.name}</p>
           </div>
 
           {isProfileDropdownOpen && (
@@ -214,7 +235,7 @@ const Menu = () => {
                     fontWeight: 500,
                   }}
                 >
-                  Demat Active • {userProfile.userId}
+                  Demat Active
                 </span>
               </div>
 
@@ -315,7 +336,7 @@ const Menu = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 style={{ margin: "0 0 14px", color: "#333", fontWeight: 500 }}>
-              Account Profile ({userProfile.userId})
+              Account Profile ({userProfile.email})
             </h3>
             <form onSubmit={handleSaveProfile}>
               <div style={{ marginBottom: "10px" }}>
