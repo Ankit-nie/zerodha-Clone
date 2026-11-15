@@ -7,11 +7,11 @@ function Navbar() {
     style={{background:"FFF"}}>
       <div className="container p-2">
 
-        {/* Zerodha Logo */}
+        {/* TradeX Logo */}
         <Link className="navbar-brand" to="/">
           <img
             src="media/logo.svg"
-            alt="Zerodha Logo"
+            alt="TradeX Logo"
             style={{ width: "150px" }}
           />
         </Link>

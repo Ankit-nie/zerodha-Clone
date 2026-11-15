@@ -99,7 +99,19 @@ const Menu = () => {
 
   return (
     <div className="menu-container">
-      <img src="logo.png" alt="Kite Logo" style={{ width: "50px" }} />
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <img src="logo.png" alt="TradeX Logo" style={{ width: "36px" }} />
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            color: "#387ed1",
+            letterSpacing: "0.5px",
+          }}
+        >
+          TradeX
+        </span>
+      </div>
       <div className="menus">
         <ul>
           <li>

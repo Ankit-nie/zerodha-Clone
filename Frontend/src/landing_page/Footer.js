@@ -6,8 +6,8 @@ function Footer() {
     <div className="container border-top mt-5">
       <div className="row mt-5">
         <div className="col">
-          <img src="media/logo.svg" style={{ width: "50%" }} />
-          <p>&copy; 2010 - 2026, Zerodha Broking Ltd.All rights reserved.</p>
+          <img src="media/logo.svg" alt="TradeX" style={{ width: "50%" }} />
+          <p>&copy; 2010 - 2026, TradeX Broking Ltd. All rights reserved.</p>
         </div>
         <div className="col">
           <p>Company</p>
@@ -19,9 +19,9 @@ function Footer() {
           <br />
           <a href="">Careers</a>
           <br />
-          <a href="">Zerodha Cares(CSR)</a>
+          <a href="">TradeX Cares(CSR)</a>
           <br />
-          <a href="">Zerodha.tech</a>
+          <a href="">TradeX.tech</a>
           <br />
           <a href="">Open source</a>
           <br />

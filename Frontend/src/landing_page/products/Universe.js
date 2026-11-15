@@ -7,7 +7,7 @@ function Universe() {
   return (
     <div className="container mt-5  text-center">
       <div className="row">
-        <h1 className="mt-5">The Zerodha Universe</h1>
+        <h1 className="mt-5">The TradeX Universe</h1>
         <p className="mt-3">
           Extend your trading and investment experience even further with our
           partner platforms
