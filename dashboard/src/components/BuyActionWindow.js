@@ -4,13 +4,18 @@ import axios from "axios";
 import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3002"
+    : "https://zerodha-clone-bgai.onrender.com";
+
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
   const generalContext = useContext(GeneralContext);
 
   const handleBuyClick = () => {
-    axios.post("https://zerodha-clone-bgai.onrender.com/newOrder", {
+    axios.post(`${API_BASE_URL}/newOrder`, {
       name: uid,
       qty: stockQuantity,
       price: stockPrice,

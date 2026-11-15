@@ -4,11 +4,16 @@ import { VerticalGraph } from "./VerticalGraph";
 
 // import { holdings } from "../data/data";
 
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3002"
+    : "https://zerodha-clone-bgai.onrender.com";
+
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
 
   useEffect(() => {
-    axios.get("https://zerodha-clone-bgai.onrender.com/allHoldings").then((res) => {
+    axios.get(`${API_BASE_URL}/allHoldings`).then((res) => {
       // console.log(res.data);
       setAllHoldings(res.data);
     });

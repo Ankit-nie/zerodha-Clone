@@ -217,6 +217,17 @@ app.get("/allPositions", async (req, res) => {
   res.json(allPositions);
 });
 
+// All Orders
+app.get("/allOrders", async (req, res) => {
+  let allOrders = await OrdersModel.find({});
+  res.json(allOrders);
+});
+
+// Delete Order
+app.delete("/deleteOrder/:id", async (req, res) => {
+  await OrdersModel.findByIdAndDelete(req.params.id);
+  res.json({ message: "Order deleted!" });
+});
 
 // New Order
 app.post("/newOrder", async (req, res) => {

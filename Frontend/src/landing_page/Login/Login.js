@@ -25,9 +25,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const isLocal = window.location.hostname === "localhost";
+    const backendUrl = isLocal
+      ? "http://localhost:3002"
+      : "https://zerodha-clone-bgai.onrender.com";
+    const dashboardUrl = isLocal
+      ? "http://localhost:3001"
+      : "https://zerodha-dashboard-3fwn.onrender.com";
+
     try {
       const { data } = await axios.post(
-        "https://zerodha-clone-bgai.onrender.com/login",
+        `${backendUrl}/login`,
         { ...inputValue },
         { withCredentials: true }
       );
@@ -35,7 +43,7 @@ const Login = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          window.location.href = "https://zerodha-dashboard-3fwn.onrender.com";
+          window.location.href = dashboardUrl;
         }, 1000);
       } else {
         handleError(message);

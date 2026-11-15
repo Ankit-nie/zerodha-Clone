@@ -98,6 +98,7 @@ code {
 }
 
 .table .data {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -112,12 +113,12 @@ code {
   color: rgb(151, 151, 151);
 }
 
-.imp {
+.table .data p.imp {
   font-size: 1.5rem;
   color: #313131;
 }
 
-.colored {
+.table .data p.colored {
   color: #4184f3;
 }
 
@@ -364,7 +365,7 @@ hr {
   font-weight: 300;
 }
 
-.btn {
+.no-orders .btn {
   text-decoration: none;
   background: rgb(77, 77, 248);
   padding: 10px 20px;
@@ -373,7 +374,7 @@ hr {
   margin-top: 2%;
 }
 
-.btn:hover {
+.no-orders .btn:hover {
   background: rgb(110, 110, 253);
 }
 
