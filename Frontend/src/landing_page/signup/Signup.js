@@ -51,6 +51,10 @@ const Signup = () => {
       }
     } catch (error) {
       console.log(error);
+      handleError(
+        error.response?.data?.message ||
+          "Cannot connect to server (it may be waking up, try again in 30s)"
+      );
     }
     setInputValue({
       email: "",
