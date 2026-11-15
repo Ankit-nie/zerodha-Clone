@@ -28,7 +28,7 @@ const Login = () => {
     const isLocal = window.location.hostname === "localhost";
     const backendUrl = isLocal
       ? "http://localhost:3002"
-      : "https://zerodha-clone-bgai.onrender.com";
+      : "https://zerodha-backend-7kup.onrender.com";
     const dashboardUrl = isLocal
       ? "http://localhost:3001"
       : "https://zerodha-dashboard-3fwn.onrender.com";

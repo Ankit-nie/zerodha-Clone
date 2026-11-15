@@ -5,7 +5,7 @@ import axios from "axios";
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:3002"
-    : "https://zerodha-clone-bgai.onrender.com";
+    : "https://zerodha-backend-7kup.onrender.com";
 
 const Orders = () => {
   const [allOrders, setAllOrders] = useState([]);

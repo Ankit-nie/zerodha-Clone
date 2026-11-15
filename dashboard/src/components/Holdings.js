@@ -7,7 +7,7 @@ import { VerticalGraph } from "./VerticalGraph";
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:3002"
-    : "https://zerodha-clone-bgai.onrender.com";
+    : "https://zerodha-backend-7kup.onrender.com";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
