@@ -6,7 +6,6 @@ function Hero() {
       <div className="row p-5 mt-5 mb-5">
         <h1 className="fs-3 text-center">
           We pioneered the discount broking model in India
-          hi anshu new users
           <br /> Now, we are breaking ground with our technology.
         </h1>
       </div>
