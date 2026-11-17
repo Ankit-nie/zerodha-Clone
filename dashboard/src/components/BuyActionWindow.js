@@ -14,6 +14,12 @@ const BuyActionWindow = ({ uid }) => {
   const [stockPrice, setStockPrice] = useState(0.0);
   const generalContext = useContext(GeneralContext);
 
+  const totalCost = (Number(stockQuantity) * Number(stockPrice)).toFixed(2);
+  const addedFunds = parseFloat(localStorage.getItem("zerodha_added_funds") || "0");
+  const withdrawnFunds = parseFloat(localStorage.getItem("zerodha_withdrawn_funds") || "0");
+  const availableMargin = 4043.1 + addedFunds - withdrawnFunds;
+  const isInsufficientMargin = Number(totalCost) > availableMargin;
+
   const handleBuyClick = () => {
     axios.post(`${API_BASE_URL}/newOrder`, {
       name: uid,
@@ -58,7 +64,14 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>
+          Margin required ₹{totalCost > 0 ? totalCost : "140.65"}
+          {isInsufficientMargin && (
+            <span className="down" style={{ marginLeft: "6px" }}>
+              (Exceeds margin)
+            </span>
+          )}
+        </span>
         <div>
           <Link to="" className="btn btn-blue" onClick={handleBuyClick}>
             Buy

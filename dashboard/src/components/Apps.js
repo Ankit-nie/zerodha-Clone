@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { holdings, watchlist } from "../data/data";
 
 const ZERODHA_APPS = [
   {
@@ -64,6 +65,40 @@ const Apps = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
+  const [marketShift, setMarketShift] = useState(0);
+  const [alertStock, setAlertStock] = useState(watchlist[0]?.name || "INFY");
+  const [targetPrice, setTargetPrice] = useState("");
+  const [priceAlerts, setPriceAlerts] = useState(() => {
+    const saved = localStorage.getItem("zerodha_price_alerts");
+    return saved
+      ? JSON.parse(saved)
+      : [{ stock: "INFY", price: "1500.00" }, { stock: "TCS", price: "3150.00" }];
+  });
+
+  const currentPortfolioValue = holdings.reduce(
+    (total, stock) => total + stock.price * stock.qty,
+    0
+  );
+  const projectedValue = currentPortfolioValue * (1 + marketShift / 100);
+  const difference = projectedValue - currentPortfolioValue;
+
+  const handleAddPriceAlert = (e) => {
+    e.preventDefault();
+    if (!targetPrice || Number(targetPrice) <= 0) return;
+    const updated = [
+      ...priceAlerts,
+      { stock: alertStock, price: Number(targetPrice).toFixed(2) },
+    ];
+    setPriceAlerts(updated);
+    localStorage.setItem("zerodha_price_alerts", JSON.stringify(updated));
+    setTargetPrice("");
+  };
+
+  const handleRemoveAlert = (indexToRemove) => {
+    const updated = priceAlerts.filter((_, idx) => idx !== indexToRemove);
+    setPriceAlerts(updated);
+    localStorage.setItem("zerodha_price_alerts", JSON.stringify(updated));
+  };
 
   const toggleConnectApp = (id) => {
     const updated = connectedApps.includes(id)
@@ -277,6 +312,134 @@ const Apps = () => {
             </div>
           );
         })}
+      </div>
+
+      <hr className="divider" />
+
+      {/* Extra Feature 1: Portfolio What-If Simulator */}
+      <div className="section">
+        <h3 className="title">Portfolio Simulator</h3>
+        <div className="col">
+          <p>Simulate NIFTY 50 movement (-20% to +20%)</p>
+          <input
+            type="range"
+            min="-20"
+            max="20"
+            value={marketShift}
+            onChange={(e) => setMarketShift(Number(e.target.value))}
+            style={{ width: "50%", marginTop: "12px" }}
+          />
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <h5>{marketShift > 0 ? `+${marketShift}%` : `${marketShift}%`}</h5>
+            <p>Market change</p>
+          </div>
+          <div className="col">
+            <h5>{currentPortfolioValue.toFixed(2)}</h5>
+            <p>Current value</p>
+          </div>
+          <div className="col">
+            <h5 className={difference >= 0 ? "up" : "down"}>
+              {projectedValue.toFixed(2)}{" "}
+              <span>
+                ({difference >= 0 ? "+" : ""}
+                {difference.toFixed(2)})
+              </span>
+            </h5>
+            <p>Projected value</p>
+          </div>
+        </div>
+        <hr className="divider" />
+      </div>
+
+      {/* Extra Feature 2: Smart GTT Price Alerts */}
+      <div className="section">
+        <h3 className="title">Smart Price Alerts ({priceAlerts.length})</h3>
+        <form
+          onSubmit={handleAddPriceAlert}
+          style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "20px" }}
+        >
+          <select
+            value={alertStock}
+            onChange={(e) => setAlertStock(e.target.value)}
+            style={{
+              padding: "8px 12px",
+              border: "1px solid #ddd",
+              borderRadius: "2px",
+              fontSize: "0.85rem",
+              color: "rgb(71, 71, 71)",
+              fontWeight: 300,
+            }}
+          >
+            {watchlist.map((stock, idx) => (
+              <option key={idx} value={stock.name}>
+                {stock.name} (₹{stock.price})
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            step="0.05"
+            placeholder="Target price (₹)"
+            value={targetPrice}
+            onChange={(e) => setTargetPrice(e.target.value)}
+            style={{
+              padding: "8px 12px",
+              border: "1px solid #ddd",
+              borderRadius: "2px",
+              fontSize: "0.85rem",
+              color: "rgb(71, 71, 71)",
+              fontWeight: 300,
+            }}
+          />
+          <button
+            type="submit"
+            className="btn btn-blue"
+            style={{ border: "none", cursor: "pointer", fontSize: "0.8rem" }}
+          >
+            Add Alert
+          </button>
+        </form>
+
+        <div className="order-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Target Price (₹)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {priceAlerts.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{item.stock}</td>
+                  <td>{item.price}</td>
+                  <td className="profit">Active</td>
+                  <td>
+                    <button
+                      onClick={() => handleRemoveAlert(idx)}
+                      style={{
+                        background: "#ff5722",
+                        color: "#fff",
+                        border: "none",
+                        padding: "5px 10px",
+                        borderRadius: "2px",
+                        fontSize: "0.75rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

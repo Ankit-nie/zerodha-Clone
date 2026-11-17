@@ -19,6 +19,12 @@ import { DoughnutChart } from "./DoughnoutChart";
 const labels = watchlist.map((subArray) => subArray["name"]);
 
 const WatchList = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredStocks = watchlist.filter((stock) =>
+    stock.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const data = {
     labels,
     datasets: [
@@ -55,12 +61,14 @@ const WatchList = () => {
           id="search"
           placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
           className="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <span className="counts"> {watchlist.length} / 50</span>
+        <span className="counts"> {filteredStocks.length} / 50</span>
       </div>
 
       <ul className="list">
-        {watchlist.map((stock, index) => {
+        {filteredStocks.map((stock, index) => {
           return <WatchListItem stock={stock} key={index} />;
         })}
       </ul>

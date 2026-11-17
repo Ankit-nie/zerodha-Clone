@@ -34,8 +34,53 @@ const Summary = () => {
   );
   const displayName = urlParams.get("username") || savedProfile.name || "User";
 
+  const [showLoginMsg, setShowLoginMsg] = useState(false);
+
+  useEffect(() => {
+    const isFreshLogin =
+      window.location.search.includes("username=") ||
+      window.location.search.includes("email=");
+    const alreadyShown = sessionStorage.getItem("loginToastShown");
+
+    if (isFreshLogin || !alreadyShown) {
+      setShowLoginMsg(true);
+      sessionStorage.setItem("loginToastShown", "true");
+      const timer = setTimeout(() => {
+        setShowLoginMsg(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <>
+      {showLoginMsg && (
+        <div
+          style={{
+            padding: "12px 18px",
+            marginBottom: "20px",
+            border: "1px solid rgb(224, 224, 224)",
+            borderLeft: "4px solid rgb(72, 194, 55)",
+            color: "rgb(71, 71, 71)",
+            fontSize: "0.9rem",
+            fontWeight: 300,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>
+            You are logged in successfully. Welcome back to TradeX, {displayName}!
+          </span>
+          <span
+            onClick={() => setShowLoginMsg(false)}
+            style={{ cursor: "pointer", color: "rgb(153, 153, 153)", fontSize: "0.8rem" }}
+          >
+            ✕
+          </span>
+        </div>
+      )}
+
       <div className="username">
         <h6>Hi, {displayName}!</h6>
         <hr className="divider" />
