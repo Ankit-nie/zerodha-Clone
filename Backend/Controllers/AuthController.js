@@ -1,6 +1,7 @@
 
 const User = require("../model/UserModel");
 const { createSecretToken } = require("../util/SecretToken");
+const { sendLoginEmail } = require("../util/SendEmail");
 const bcrypt = require("bcryptjs");
 
 // SIGNUP
@@ -37,6 +38,15 @@ module.exports.Signup = async (req, res, next) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
+    });
+
+    // Send Welcome + Login alert email on Signup too
+    sendLoginEmail({
+      to: user.email,
+      username: user.username,
+      isSignup: true,
+    }).catch((mailErr) => {
+      console.error("[TradeX Mail] Failed to send signup email:", mailErr.message);
     });
 
     return res.status(201).json({
@@ -96,9 +106,18 @@ module.exports.Login = async (req, res, next) => {
       sameSite: "lax",
     });
 
+    // Send Gmail login alert asynchronously (does not block login response)
+    sendLoginEmail({
+      to: user.email,
+      username: user.username,
+    }).catch((mailErr) => {
+      console.error("[TradeX Mail] Failed to send login email:", mailErr.message);
+    });
+
     return res.status(200).json({
       message: "User logged in successfully",
       success: true,
+      emailAlert: Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS),
       user: {
         _id: user._id,
         email: user.email,

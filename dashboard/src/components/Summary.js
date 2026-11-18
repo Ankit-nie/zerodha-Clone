@@ -57,12 +57,12 @@ const Summary = () => {
       {showLoginMsg && (
         <div
           style={{
-            padding: "12px 18px",
-            marginBottom: "20px",
-            border: "1px solid rgb(224, 224, 224)",
-            borderLeft: "4px solid rgb(72, 194, 55)",
-            color: "rgb(71, 71, 71)",
-            fontSize: "0.9rem",
+            padding: "10px 16px",
+            marginBottom: "18px",
+            border: "1px solid rgb(235, 234, 234)",
+            borderLeft: "3px solid rgb(103, 201, 136)",
+            color: "rgb(70, 70, 70)",
+            fontSize: "0.8rem",
             fontWeight: 300,
             display: "flex",
             justifyContent: "space-between",
@@ -74,7 +74,7 @@ const Summary = () => {
           </span>
           <span
             onClick={() => setShowLoginMsg(false)}
-            style={{ cursor: "pointer", color: "rgb(153, 153, 153)", fontSize: "0.8rem" }}
+            style={{ cursor: "pointer", color: "rgb(145, 145, 145)", fontSize: "0.8rem" }}
           >
             ✕
           </span>

@@ -8,6 +8,7 @@ const cors = require("cors");
 const { HoldingsModel } = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
+const { getAllPredictions } = require("./util/StockPredictor");
 
 const PORT = process.env.PORT || 3002;
 const uri = process.env.MONGO_URL;
@@ -208,6 +209,12 @@ app.use("/", authRoute);
 app.get("/allHoldings", async (req, res) => {
   let allHoldings = await HoldingsModel.find({});
   res.json(allHoldings);
+});
+
+// Stock Profit/Loss Predictions based on historical past data
+app.get("/predictions", (req, res) => {
+  const predictions = getAllPredictions();
+  res.json(predictions);
 });
 
 

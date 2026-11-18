@@ -172,6 +172,17 @@ const Menu = () => {
           <li>
             <Link
               style={{ textDecoration: "none" }}
+              to="/predictions"
+              onClick={() => handleMenuClick(5)}
+            >
+              <p className={selectedMenu === 5 ? activeMenuClass : menuClass}>
+                Predictions
+              </p>
+            </Link>
+          </li>
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
               to="/apps"
               onClick={() => handleMenuClick(6)}
             >
@@ -308,19 +319,16 @@ const Menu = () => {
                   ⌨️ Keyboard Shortcuts
                 </div>
 
-                <a
-                  href="https://zerodha.com/varsity"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    ...dropdownItemStyle,
-                    display: "block",
-                    textDecoration: "none",
+                <div
+                  onClick={() => {
+                    handleMenuClick(6);
+                    navigate("/apps");
+                    setIsProfileDropdownOpen(false);
                   }}
-                  onClick={() => setIsProfileDropdownOpen(false)}
+                  style={dropdownItemStyle}
                 >
-                  📘 Varsity & Help Center
-                </a>
+                  📘 TradeX Academy & Help Center
+                </div>
               </div>
 
               {/* Logout */}
