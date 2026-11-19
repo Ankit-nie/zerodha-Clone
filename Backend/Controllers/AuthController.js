@@ -40,18 +40,24 @@ module.exports.Signup = async (req, res, next) => {
       sameSite: "lax",
     });
 
-    // Send Welcome + Login alert email on Signup too
-    sendLoginEmail({
-      to: user.email,
-      username: user.username,
-      isSignup: true,
-    }).catch((mailErr) => {
+    // Send Welcome + Login alert email on Signup (with automatic SMTP fallback)
+    let emailStatus = { sent: false };
+    try {
+      emailStatus = await sendLoginEmail({
+        to: user.email,
+        username: user.username,
+        isSignup: true,
+      });
+    } catch (mailErr) {
       console.error("[TradeX Mail] Failed to send signup email:", mailErr.message);
-    });
+      emailStatus = { sent: false, error: mailErr.message };
+    }
 
     return res.status(201).json({
       message: "User signed up successfully",
       success: true,
+      emailAlert: Boolean(emailStatus.sent),
+      emailStatus,
       user: {
         _id: user._id,
         email: user.email,
@@ -106,20 +112,23 @@ module.exports.Login = async (req, res, next) => {
       sameSite: "lax",
     });
 
-    // Send Gmail login alert asynchronously (does not block login response)
-    sendLoginEmail({
-      to: user.email,
-      username: user.username,
-    }).catch((mailErr) => {
+    // Send Login alert email (Brevo with automatic Gmail SMTP fallback)
+    let emailStatus = { sent: false };
+    try {
+      emailStatus = await sendLoginEmail({
+        to: user.email,
+        username: user.username,
+      });
+    } catch (mailErr) {
       console.error("[TradeX Mail] Failed to send login email:", mailErr.message);
-    });
+      emailStatus = { sent: false, error: mailErr.message };
+    }
 
     return res.status(200).json({
       message: "User logged in successfully",
       success: true,
-      emailAlert: Boolean(
-        process.env.EMAIL_USER && (process.env.BREVO_API_KEY || process.env.EMAIL_PASS)
-      ),
+      emailAlert: Boolean(emailStatus.sent),
+      emailStatus,
       user: {
         _id: user._id,
         email: user.email,

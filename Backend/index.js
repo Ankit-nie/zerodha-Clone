@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -9,6 +10,7 @@ const { HoldingsModel } = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
 const { getAllPredictions } = require("./util/StockPredictor");
+const { checkMailStatus } = require("./util/SendEmail");
 
 const PORT = process.env.PORT || 3002;
 const uri = process.env.MONGO_URL;
@@ -32,6 +34,17 @@ app.use(express.json());
 
 // Authentication Route
 app.use("/", authRoute);
+
+// Root health check
+app.get("/", (req, res) => {
+  res.send("TradeX Backend API is running");
+});
+
+// Mail configuration diagnostic endpoint (no secrets exposed)
+app.get("/mail-status", async (req, res) => {
+  const status = await checkMailStatus();
+  res.json(status);
+});
 
 
 // app.get("/addHoldings", async (req, res) => {
