@@ -117,7 +117,9 @@ module.exports.Login = async (req, res, next) => {
     return res.status(200).json({
       message: "User logged in successfully",
       success: true,
-      emailAlert: Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS),
+      emailAlert: Boolean(
+        process.env.EMAIL_USER && (process.env.BREVO_API_KEY || process.env.EMAIL_PASS)
+      ),
       user: {
         _id: user._id,
         email: user.email,
