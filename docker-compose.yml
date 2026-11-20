@@ -1,7 +1,10 @@
 services:
+  # Optional local MongoDB container (enable with: docker compose --profile local-db up --build -d)
+  # By default, Backend uses MONGO_URL from Backend/.env (e.g., MongoDB Atlas).
   mongo:
     image: mongo:7
     container_name: tradex-mongo
+    profiles: ["local-db"]
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -25,17 +28,12 @@ services:
     restart: unless-stopped
     ports:
       - "3002:3002"
+    env_file:
+      - path: ./Backend/.env
+        required: false
     environment:
       PORT: 3002
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/tradex}
-      TOKEN_KEY: ${TOKEN_KEY:-tradex-local-dev-jwt-secret-change-me}
-      EMAIL_USER: ${EMAIL_USER:-}
-      EMAIL_PASS: ${EMAIL_PASS:-}
-      BREVO_API_KEY: ${BREVO_API_KEY:-}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
-    depends_on:
-      mongo:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
       interval: 20s
