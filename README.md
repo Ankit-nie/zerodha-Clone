@@ -67,3 +67,5 @@ See **[DEVOPS.md](./DEVOPS.md)** for the complete guide covering:
 - GitFlow branching strategy (`main`, `develop`, `feature/*`, `release/*`, `hotfix/*`)
 - All 4 GitHub Actions workflows (`ci.yml`, `cd.yml`, `gitflow-guard.yml`, `release.yml`)
 - Step-by-step live demo commands for evaluation
+
+<!-- DevOps Demo -->
