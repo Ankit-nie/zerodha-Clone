@@ -20,9 +20,19 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./Routes/AuthRoute");
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://zerodha-frontend-xft8.onrender.com",
+  "https://zerodha-dashboard-3fwn.onrender.com",
+  ...(process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(",").map((o) => o.trim()).filter(Boolean)
+    : []),
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001", "https://zerodha-frontend-xft8.onrender.com", "https://zerodha-dashboard-3fwn.onrender.com"],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -38,6 +48,18 @@ app.use("/", authRoute);
 // Root health check
 app.get("/", (req, res) => {
   res.send("TradeX Backend API is running");
+});
+
+// Structured DevOps / Docker health check endpoint
+app.get("/health", (req, res) => {
+  const dbStates = ["disconnected", "connected", "connecting", "disconnecting"];
+  res.status(200).json({
+    status: "ok",
+    service: "tradex-backend",
+    database: dbStates[mongoose.connection.readyState] || "unknown",
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Mail configuration diagnostic endpoint (no secrets exposed)
@@ -263,8 +285,18 @@ app.post("/newOrder", async (req, res) => {
   res.send("Order saved!");
 });
 
-app.listen(PORT, () => {
-  console.log("App started!");
-  mongoose.connect(uri);
-  console.log("DB started!");
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`TradeX Backend started on port ${PORT}`);
+    if (uri) {
+      mongoose
+        .connect(uri)
+        .then(() => console.log("DB connected!"))
+        .catch((err) => console.error("DB connection error:", err.message));
+    } else {
+      console.warn("MONGO_URL not set; running without database connection.");
+    }
+  });
+}
+
+module.exports = { app };

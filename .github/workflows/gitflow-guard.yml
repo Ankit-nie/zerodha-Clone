@@ -1,0 +1,52 @@
+name: GitFlow Branch Policy Guard
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate-gitflow:
+    name: Enforce GitFlow Branching Model
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source and target branch rules
+        env:
+          BASE_BRANCH: ${{ github.base_ref }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          echo "Checking GitFlow rule: ${HEAD_BRANCH} -> ${BASE_BRANCH}"
+
+          VALID="false"
+          if [ "$BASE_BRANCH" = "develop" ]; then
+            if [[ "$HEAD_BRANCH" =~ ^(feature|bugfix|hotfix|release)/.+ ]] || [ "$HEAD_BRANCH" = "main" ]; then
+              VALID="true"
+            fi
+          elif [ "$BASE_BRANCH" = "main" ]; then
+            if [[ "$HEAD_BRANCH" =~ ^(release|hotfix)/.+ ]] || [ "$HEAD_BRANCH" = "develop" ]; then
+              VALID="true"
+            fi
+          fi
+
+          if [ "$VALID" = "true" ]; then
+            cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## GitFlow Branch Check Passed
+          - **Source branch:** \`${HEAD_BRANCH}\`
+          - **Target branch:** \`${BASE_BRANCH}\`
+          - Follows TradeX GitFlow policy.
+          EOF
+          else
+            cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## GitFlow Branch Check Failed
+          - **Source branch:** \`${HEAD_BRANCH}\`
+          - **Target branch:** \`${BASE_BRANCH}\`
+
+          ### Allowed GitFlow Flows
+          - Into \`develop\`: \`feature/*\`, \`bugfix/*\`, \`release/*\`, \`hotfix/*\`, or \`main\`
+          - Into \`main\`: \`release/*\`, \`hotfix/*\`, or \`develop\`
+          EOF
+            echo "::error::Invalid GitFlow merge path: ${HEAD_BRANCH} -> ${BASE_BRANCH}"
+            exit 1
+          fi
