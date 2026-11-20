@@ -73,8 +73,7 @@ feature/xyz               ●─●                        (short-lived features
 
 | Workflow File | Trigger | What It Does |
 | --- | --- | --- |
-| **`ci.yml`** | Push to `main`, `develop`, `feature/**`, `bugfix/**`, `release/**`, `hotfix/**` and PRs to `main`/`develop` | Runs Backend lint + unit/API tests, Frontend Jest tests + build, Dashboard Jest tests + build, uploads build artifacts, validates `docker-compose.yml`, builds all 3 Docker images with Buildx cache, and produces a DevSecOps `npm audit` summary |
-| **`cd.yml`** | Push to `main`, `develop`, `v*.*.*` tags, or manual trigger | Builds & pushes Docker images (`tradex-backend`, `tradex-frontend`, `tradex-dashboard`) to GitHub Container Registry (`ghcr.io`), tags by branch/SHA/semver, triggers optional Render deploy hooks on production, and outputs a deployment summary |
+| **`ci-cd.yml`** | Push to `main`, `develop`, `feature/**`, `bugfix/**`, `release/**`, `hotfix/**`, `v*.*.*` tags, PRs to `main`/`develop`, or manual trigger | **Unified 3-Stage Visual Pipeline**: **(1) CI** (Backend lint + tests, Frontend tests + build, Dashboard tests + build, DevSecOps `npm audit`) -> **(2) Docker Build & Push** (validates `docker-compose.yml`, builds all 3 images; verifies on PRs/features and pushes to GHCR on `develop`/`main`/`v*` tags) -> **(3) CD Deploy** (deploys staging/production, triggers optional Render hooks, writes Deployment Summary) |
 | **`gitflow-guard.yml`** | Pull Requests targeting `main` or `develop` | Automatically enforces GitFlow rules (blocks invalid merges such as `feature/* -> main`) |
 | **`release.yml`** | Push of version tags (`v*.*.*`) | Automatically creates a GitHub Release with generated release notes and GHCR image links |
 

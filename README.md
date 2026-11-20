@@ -1,8 +1,8 @@
 # TradeX — Full-Stack Stock Trading Platform (DevOps Ready)
 
-[![CI Pipeline](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/ci.yml/badge.svg)](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/ci.yml)
-[![CD Pipeline](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/cd.yml/badge.svg)](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/cd.yml)
+[![CI/CD Pipeline](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/ci-cd.yml)
 [![GitFlow Guard](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/gitflow-guard.yml/badge.svg)](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/gitflow-guard.yml)
+[![Release](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/release.yml/badge.svg)](https://github.com/Ankit-nie/zerodha-Clone/actions/workflows/release.yml)
 
 TradeX is a full-stack trading web application built with **Node.js / Express**, **MongoDB**, and **React** (Landing Frontend + Trading Dashboard), containerized with **Docker & Docker Compose** and automated with **GitHub Actions CI/CD** and **GitFlow**.
 
