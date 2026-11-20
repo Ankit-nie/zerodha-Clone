@@ -1,0 +1,37 @@
+name: Automated GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create GitHub Release for ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release with auto-generated notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          TAG="${{ github.ref_name }}"
+          NOTES=$(cat <<EOF
+          ### Docker Images (GitHub Container Registry)
+          - \`ghcr.io/${REPO_LOWER}/tradex-backend:${TAG}\`
+          - \`ghcr.io/${REPO_LOWER}/tradex-frontend:${TAG}\`
+          - \`ghcr.io/${REPO_LOWER}/tradex-dashboard:${TAG}\`
+          EOF
+          )
+          gh release create "$TAG" \
+            --title "TradeX ${TAG}" \
+            --generate-notes \
+            --notes "$NOTES"
